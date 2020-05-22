@@ -12,3 +12,5 @@ School project for subject Applications for mobile devices I.
 * JQuery
 * Pure JS
 * HTML + CSS
+
+Free to use.
