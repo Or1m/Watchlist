@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="resources/onsen/onsenui.css">
+        <link rel="stylesheet" href="resources/onsen/dark-onsen-css-components.min.css">
+        <script src="resources/onsen/onsenui.min.js"></script>
+        <script src="resources/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="https://addevent.com/libs/atc/1.6.1/atc.min.js" async defer></script>
+
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <!-- Tab bar ------------------------------------------------------------->
+        <ons-tabbar swipeable position="auto">
+            <ons-tab page="watchlist.html" label="Watchlist" icon="fa-clock" active>
+            </ons-tab>
+            <ons-tab page="myshows.html" label="My shows" icon="fa-film">
+            </ons-tab>
+            <ons-tab page="export.html" label="Export / Import" icon="fa-cog">
+            </ons-tab>
+        </ons-tabbar>
+
+        <audio id="myAudio">
+            <source src="resources/Lullaby.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <!-- Watchlist ----------------------------------------------------------->
+        <template id="watchlist.html">
+            <ons-page id="watchlist">
+                <ons-toolbar>
+                    <div class="left">
+                        <ons-toolbar-button onclick="get_joke_of_the_day(this);"><i class="fas fa-question"></i></ons-toolbar-button>
+                    </div>
+                    <div class="center header">Watchlist<span class="notification notification--material" id="notifIcon">1</span></div>
+                    <div class="right">
+                        <ons-toolbar-button onclick="playAudio();"><i class="fas fa-play"></i></ons-toolbar-button>
+                        <ons-toolbar-button onclick="pauseAudio();"><i class="fas fa-pause"></i></ons-toolbar-button>
+                    </div>
+                </ons-toolbar>
+                <ons-list id="myWatchList">
+                </ons-list>
+            </ons-page>
+        </template>
+
+        <!-- My shows ------------------------------------------------------------->
+        <template id="myshows.html">
+            <ons-page id="myshows">
+                <ons-toolbar>
+                    <div class="left">
+                        <ons-toolbar-button onclick="get_joke_of_the_day(this);"><i class="fas fa-question"></i></ons-toolbar-button>
+                    </div>
+                    <div class="center header">My shows</div>
+                    <div class="right">
+                        <ons-toolbar-button onclick="playAudio();"><i class="fas fa-play"></i></ons-toolbar-button>
+                        <ons-toolbar-button onclick="pauseAudio();"><i class="fas fa-pause"></i></ons-toolbar-button>
+                    </div>
+                </ons-toolbar>
+                <ons-search-input modifier="material" id="searchBar" placeholder="Search"></ons-search-input>
+                <ons-list id="myShowsList">
+                </ons-list>
+                <ons-fab position="bottom right" onclick="openDialog()">
+                    <ons-icon icon="md-plus"></ons-icon>
+                </ons-fab>
+            </ons-page>
+        </template>
+
+        <!-- Export ------------------------------------------------------------->
+        <template id="export.html">
+            <ons-page id="export">
+                <ons-toolbar>
+                    <div class="left">
+                        <ons-toolbar-button onclick="get_joke_of_the_day(this);"><i class="fas fa-question"></i></ons-toolbar-button>
+                    </div>
+                    <div class="center header">Export / Import</div>
+                    <div class="right">
+                        <ons-toolbar-button onclick="playAudio();"><i class="fas fa-play"></i></ons-toolbar-button>
+                        <ons-toolbar-button onclick="pauseAudio();"><i class="fas fa-pause"></i></ons-toolbar-button>
+                    </div>
+                </ons-toolbar>
+            <p class="exportButts"><ons-button modifier="large outline" id="export" onclick="exportData();">Export data as JSON file</ons-button></p>
+            <p class="exportButts"><ons-button modifier="large outline" id="import" onclick="importData();">Import data from JSON file</ons-button></p>
+
+            <p class="exportButts">
+                <span class="nobr">
+                    <label><ons-radio modifier="material" name="import" input-id="append" id="appendd" checked></ons-radio></label>
+                    <label class="importLabel" for="append">Append</label>
+                </span>
+
+                <span class="nobr">
+                    <label><ons-radio modifier="material" name="import" input-id="replace" id="replacee"></ons-radio></label>
+                    <label class="importLabel" for="replace">Replace</label>
+                </span>
+            </p>
+
+            </ons-page>
+        </template>
+
+        <!-- Dialog ------------------------------------------------------------>
+        <ons-dialog id="addShow">
+
+            <ons-toolbar>
+                <div class="center header2">Add new show</div>
+            </ons-toolbar>
+
+            <div id="dial">
+                <p><ons-input id="name" modifier="material" placeholder="Name" float></ons-input></p> 
+                <p><ons-input id="seasons" modifier="material" placeholder="Number of seasons" float></ons-input></p> 
+                <p><ons-input id="watched" modifier="material" placeholder="Watched seasons" float></ons-input></p> 
+
+                <p id="par">Show description</p>
+                <p class="par"><textarea id="textarea" class="textarea" rows="3"></textarea></p> 
+
+                <p id="par">Release date</p>
+                <p><ons-input id="dateInput" type="date" modifier="material" onchange="setReleaseDate(new Date(this.value))"></input></p>
+
+                <p><ons-input id="imageSrc" modifier="material" placeholder="Image source" float></ons-input></p>
+                <p><ons-input id="trailerId" modifier="material" placeholder="Trailer source" float></ons-input></p> 
+
+                <p><ons-button modifier="outline" id="addButton" onclick="addShow();">Add Show</ons-button></p> 
+                <p><ons-button modifier="outline" id="closeButton" onclick="closeDialog();">Close</ons-button></p>       
+            </div>
+
+        </ons-dialog>
+
+        <ons-popover direction="down" id="popover">
+            <div id="popdiv">
+                <p id="popP">This is a popover</p>
+                <p><ons-button modifier="outline" onclick="hidePopover()">Close</ons-button></p>
+            </div>
+          </ons-popover>
+
+        <!-- Scripts ------------------------------------------------------------->
+        <script src="scripts/global.js"></script>
+        <script src="scripts/myShows.js"></script>
+        <script src="scripts/watchList.js"></script>
+        <script src="scripts/exportImport.js"></script>
+    </body>
+</html>
